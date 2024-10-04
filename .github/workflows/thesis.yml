@@ -1,0 +1,19 @@
+name: Install LaTeX Dependencies
+
+on: [push, pull_request]
+
+jobs:
+  install-latex:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Ubuntu
+        run: sudo apt update && sudo apt install -y texlive texlive-latex-extra
+
+      - name: Run install_dependencies.sh
+        run: |
+          chmod +x thesis/scripts/install_dependencies.sh
+          thesis/scripts/install_dependencies.sh

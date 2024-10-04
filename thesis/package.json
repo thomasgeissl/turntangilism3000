@@ -1,0 +1,16 @@
+{
+  "name": "thesis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "pdflatex main.tex",
+    "dev": "nodemon --ext tex --exec \"npm run build\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
