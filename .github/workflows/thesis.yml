@@ -9,7 +9,7 @@ on:
     types: [created]  # Trigger on release creation
 
 jobs:
-  install-latex:
+  build-pdf:
     runs-on: ubuntu-latest
 
     steps:
