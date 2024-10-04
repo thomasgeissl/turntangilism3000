@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "pdflatex thesis.tex",
+    "build": "pdflatex thesis.tex && bibtex thesis && pdflatex thesis.tex && pdflatex thesis.tex",
     "dev": "nodemon --ext tex --exec \"npm run build\""
+
   },
   "keywords": [],
   "author": "",

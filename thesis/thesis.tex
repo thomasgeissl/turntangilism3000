@@ -32,6 +32,8 @@
 
 % Chapters
 \chapter{Introduction}
+This is a reference to an example article \cite{sample2024}. It demonstrates how to cite sources using BibTeX.
+
 \lipsum[3-5] % Placeholder text, replace with your content
 
 \chapter{Related Work}
@@ -51,17 +53,7 @@
 
 % Bibliography
 \newpage
-\begin{thebibliography}{9}
-    \bibitem{latexcompanion} 
-    Leslie Lamport. 
-    \textit{LaTeX: A Document Preparation System}. 
-    Addison Wesley, 2nd Edition, 1994.
-
-    \bibitem{website} 
-    Author. 
-    Title of the webpage. 
-    Available at: \url{https://example.com}
-
-\end{thebibliography}
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}
