@@ -16,4 +16,6 @@ jobs:
 
       
       - name: Compile Firmware
-        run: sudo /root/.platformio/penv/bin/platformio run
+        run: |
+          cd ./firmware
+          sudo /root/.platformio/penv/bin/platformio run
