@@ -34,11 +34,6 @@ jobs:
         ./arduino-cli core update-index
         ./arduino-cli core install esp32:esp32
 
-    - name: Install Libraries from libraries.json
-      run: |
-        cd firmware
-        ./arduino-cli lib install --json-file libraries.json
-
     - name: Install Libraries from arduino-cli-config.json
       run: |
         cd firmware
