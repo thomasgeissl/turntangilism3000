@@ -18,16 +18,23 @@ jobs:
 
     - name: Set up Arduino CLI
       run: |
-        wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_64bit.tar.gz
-        tar -xvf arduino-cli_latest_Linux_64bit.tar.gz
-        sudo mv arduino-cli /usr/local/bin/
-        arduino-cli config init
+        cd firmware
+        chmod +x arduino-cli
+        ./arduino-cli config init
 
     - name: Install ESP32 core
       run: |
-        arduino-cli core update-index
-        arduino-cli core install esp32:esp32
+        cd firmware
+        ./arduino-cli core update-index
+        ./arduino-cli core install esp32:esp32
+
+    - name: Install Libraries
+      run: |
+        cd firmware
+        ./arduino-cli lib install "Adafruit Unified Sensor" # Replace with your library
+        ./arduino-cli lib install "Another Library" # Add more libraries as needed
 
     - name: Compile Arduino Sketch for ESP32-S2 Mini
       run: |
-        arduino-cli compile --fqbn esp32:esp32:lolin_s2_mini firmware/firmware.ino
+        cd firmware
+        ./arduino-cli compile --fqbn esp32:esp32:lolin_s2_mini firmware.ino
