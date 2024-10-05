@@ -1,5 +1,0 @@
-version: 1
-library:
-  - name: "AceButton"
-  - name: "Adafruit TCS34725"
-  - name: "ESP-NOW MIDI"

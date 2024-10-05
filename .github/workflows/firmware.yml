@@ -34,10 +34,15 @@ jobs:
         ./arduino-cli core update-index
         ./arduino-cli core install esp32:esp32
 
-    - name: Install Libraries from arduino-cli.yaml
+    - name: Install Libraries from libraries.json
       run: |
         cd firmware
-        ./arduino-cli lib install --json-file arduino-cli.yaml
+        ./arduino-cli lib install --json-file libraries.json
+
+    - name: Install Libraries from arduino-cli-config.json
+      run: |
+        cd firmware
+        ./arduino-cli lib install --config-file arduino-cli-config.json
 
     - name: Compile Arduino Sketch for ESP32-S2 Mini
       run: |
