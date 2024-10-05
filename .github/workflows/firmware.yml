@@ -16,10 +16,17 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Download Arduino CLI
+      run: |
+        cd firmware
+        wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_64bit.tar.gz
+        tar -xvf arduino-cli_latest_Linux_64bit.tar.gz
+        mv arduino-cli arduino-cli # Rename the executable if necessary
+        chmod +x arduino-cli
+
     - name: Set up Arduino CLI
       run: |
         cd firmware
-        chmod +x arduino-cli
         ./arduino-cli config init
 
     - name: Install ESP32 core
@@ -28,11 +35,10 @@ jobs:
         ./arduino-cli core update-index
         ./arduino-cli core install esp32:esp32
 
-    - name: Install Libraries
+    - name: Install Libraries from arduino-cli.yaml
       run: |
         cd firmware
-        ./arduino-cli lib install "Adafruit Unified Sensor" # Replace with your library
-        ./arduino-cli lib install "Another Library" # Add more libraries as needed
+        ./arduino-cli lib install --json-file arduino-cli.yaml
 
     - name: Compile Arduino Sketch for ESP32-S2 Mini
       run: |
