@@ -21,7 +21,6 @@ jobs:
         cd firmware
         wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_64bit.tar.gz
         tar -xvf arduino-cli_latest_Linux_64bit.tar.gz
-        mv arduino-cli arduino-cli # Rename the executable if necessary
         chmod +x arduino-cli
 
     - name: Set up Arduino CLI
