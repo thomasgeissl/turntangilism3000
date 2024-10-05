@@ -1,45 +1,19 @@
-name: Arduino CI
+name: PlatformIO CI
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-    - name: Download Arduino CLI
-      run: |
-        cd firmware
-        wget https://downloads.arduino.cc/arduino-cli/arduino-cli_latest_Linux_64bit.tar.gz
-        tar -xvf arduino-cli_latest_Linux_64bit.tar.gz
-        chmod +x arduino-cli
+      - name: Run install_dependencies script
+        run: |
+          chmod +x firmware/scripts/install_dependencies.sh
+          ./firmware/scripts/install_dependencies.sh
 
-    - name: Set up Arduino CLI
-      run: |
-        cd firmware
-        ./arduino-cli config init
-
-    - name: Install ESP32 core
-      run: |
-        cd firmware
-        ./arduino-cli core update-index
-        ./arduino-cli core install esp32:esp32
-
-    - name: Install Libraries from arduino-cli-config.json
-      run: |
-        cd firmware
-        ./arduino-cli lib install --config-file arduino-cli-config.json
-
-    - name: Compile Arduino Sketch for ESP32-S2 Mini
-      run: |
-        cd firmware
-        ./arduino-cli compile --fqbn esp32:esp32:lolin_s2_mini firmware.ino
+      
+      - name: Compile Firmware
+        run: /root/.platformio/penv/bin/platformio run
