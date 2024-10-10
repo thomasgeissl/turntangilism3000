@@ -15,7 +15,12 @@ jobs:
           ./firmware/scripts/install_dependencies.sh
 
       
-      - name: Compile Firmware
+      - name: Compile Firmware (receiver)
         run: |
-          cd ./firmware
+          cd ./firmware/receiver
+          sudo /root/.platformio/penv/bin/platformio run
+
+      - name: Compile Firmware (turntable)
+        run: |
+          cd ./firmware/turntable
           sudo /root/.platformio/penv/bin/platformio run
