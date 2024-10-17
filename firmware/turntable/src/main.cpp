@@ -48,6 +48,10 @@ HSV rgbToHsv(int r, int g, int b) {
 
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 esp_now_midi ESP_NOW_MIDI;
+Token* midiHueArray = getTokens();
+Token _token = Token(-1,-1,-1,-1);
+unsigned long _timestamp = 0;
+
 void customOnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
   // Serial.print("Custom Callback - Status: ");
@@ -68,20 +72,21 @@ void setup()
 
   WiFi.mode(WIFI_STA);
   ESP_NOW_MIDI.setup(broadcastAddress, customOnDataSent);
+
 }
 
 void loop()
 {
-
   float red, green, blue;
   tcs.getRGB(&red, &green, &blue);
 
   auto hue = rgbToHsv(red, green, blue).h;
-
-  Serial.print("Hue:\t");
-  Serial.println(int(hue));
-
-  if(hue > 0 && hue < 10){
-    esp_err_t result = ESP_NOW_MIDI.sendNoteOn(60, 127, 1);
+  auto token = getToken(hue);
+  if(token.playCC != _token.playCC){
+    _token = token;
+    esp_err_t result = ESP_NOW_MIDI.sendControlChange(token.playCC, 127, ID);
+    Serial.println(token.playCC);
   }
+
+  // TODO: reset token after a timeout
 }
