@@ -24,3 +24,13 @@ jobs:
         run: |
           cd ./firmware/turntable
           sudo /root/.platformio/penv/bin/platformio run
+
+      - name: Compile Firmware (test_color_sensor)
+        run: |
+          cd ./firmware/test_color_sensor
+          sudo /root/.platformio/penv/bin/platformio run
+
+      - name: Compile Firmware (print_mac)
+        run: |
+          cd ./firmware/print_mac
+          sudo /root/.platformio/penv/bin/platformio run
