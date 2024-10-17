@@ -1,73 +1,64 @@
 #include <Wire.h>
 #include "Adafruit_TCS34725.h"
 
-// Create an instance of the sensor
+// Pick analog outputs, for the UNO these three work well
+// use ~560  ohm resistor between Red & Blue, ~1K for green (its brighter)
+#define redpin 3
+#define greenpin 5
+#define bluepin 6
+// for a common anode LED, connect the common pin to +5V
+// for common cathode, connect the common to ground
+
+// set to false if using a common cathode LED
+#define commonAnode true
+
+// our RGB -> eye-recognized gamma color
+byte gammatable[256];
+
+
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_50MS, TCS34725_GAIN_4X);
 
-// Function to convert RGB to HSV
-void rgbToHsv(float r, float g, float b, float &h, float &s, float &v) {
-  float maxVal = max(r, max(g, b));
-  float minVal = min(r, min(g, b));
-  v = maxVal;
-
-  float delta = maxVal - minVal;
-
-  if (maxVal != 0) {
-    s = delta / maxVal;
-  } else {
-    s = 0;
-    h = -1;
-    return;
-  }
-
-  if (r == maxVal) {
-    h = (g - b) / delta; // between yellow & magenta
-  } else if (g == maxVal) {
-    h = 2 + (b - r) / delta; // between cyan & yellow
-  } else {
-    h = 4 + (r - g) / delta; // between magenta & cyan
-  }
-
-  h *= 60;    // convert to degrees
-
-  if (h < 0) {
-    h += 360;
-  }
-}
-
 void setup() {
-  Serial.begin(115200);
-  
-  // Check if sensor is connected
-  if (!tcs.begin()) {
-    Serial.println("Couldn't find TCS34725 sensor!");
-    while (1);
-  }
+  Serial.begin(9600);
+  //Serial.println("Color View Test!");
 
-  Serial.println("TCS34725 is detected");
+  if (tcs.begin()) {
+    //Serial.println("Found sensor");
+  } else {
+    Serial.println("No TCS34725 found ... check your connections");
+    while (1); // halt!
+  }
+  tcs.setInterrupt(false);  // turn on LED
+
+  // it helps convert RGB colors to what humans see
+  for (int i=0; i<256; i++) {
+    float x = i;
+    x /= 255;
+    x = pow(x, 2.5);
+    x *= 255;
+
+    if (commonAnode) {
+      gammatable[i] = 255 - x;
+    } else {
+      gammatable[i] = x;
+    }
+    //Serial.println(gammatable[i]);
+  }
 }
 
+// The commented out code in loop is example of getRawData with clear value.
+// Processing example colorview.pde can work with this kind of data too, but It requires manual conversion to 
+// [0-255] RGB value. You can still uncomments parts of colorview.pde and play with clear value.
 void loop() {
-  uint16_t r, g, b, c;
-  tcs.getRawData(&r, &g, &b, &c);
+  float red, green, blue;
+  
 
-  // Normalize RGB values (convert to 0-1 range)
-  float red = (float)(r) / 65535.0;
-  float green = (float)(g) / 65535.0;
-  float blue = (float)(b) / 65535.0;
+  delay(60);  // takes 50ms to read
 
-  // Convert RGB to HSV
-  float h, s, v;
-  rgbToHsv(red, green, blue, h, s, v);
-
-  // Print out HSV values
-  Serial.print("RGB: (");
-  Serial.print(r); Serial.print(", ");
-  Serial.print(g); Serial.print(", ");
-  Serial.print(b);
-  Serial.print(")  HSV: (");
-  Serial.print(h); Serial.print(", ");
-  Serial.print(s); Serial.print(", ");
-  Serial.print(v);
-  Serial.println(")");
+  tcs.getRGB(&red, &green, &blue);
+  
+  Serial.print("R:\t"); Serial.print(int(red)); 
+  Serial.print("\tG:\t"); Serial.print(int(green)); 
+  Serial.print("\tB:\t"); Serial.print(int(blue));
+  Serial.print("\n");
 }
